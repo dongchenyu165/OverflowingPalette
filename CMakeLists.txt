@@ -46,6 +46,30 @@ target_link_libraries(OverflowPalette
         Qt::Widgets
 )
 
+# Deploy Qt dependencies
+if(WIN32)
+    get_target_property(_qmake_executable Qt6::qmake IMPORTED_LOCATION)
+    get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+    
+    # Set program directory
+    set(PROGRAM_OUTPUT_DIR ${CMAKE_BINARY_DIR}/program)
+
+    # Make sure program directory exists
+    file(MAKE_DIRECTORY ${PROGRAM_OUTPUT_DIR})
+    # Copy executable to program directory
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy 
+            $<TARGET_FILE:${PROJECT_NAME}>
+            ${PROGRAM_OUTPUT_DIR}/$<TARGET_FILE_NAME:${PROJECT_NAME}>
+        COMMAND "${_qt_bin_dir}/windeployqt.exe"
+                --no-compiler-runtime
+                --no-translations
+                --no-system-d3d-compiler
+                \"${PROGRAM_OUTPUT_DIR}/$<TARGET_FILE_NAME:${PROJECT_NAME}>\"
+        COMMENT "Copying executable and deploying Qt dependencies to program directory..."
+    )
+endif()
+
 include(GNUInstallDirs)
 
 install(TARGETS OverflowPalette
