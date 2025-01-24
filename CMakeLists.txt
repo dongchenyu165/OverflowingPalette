@@ -15,26 +15,35 @@ endif()
 
 qt_standard_project_setup()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# QT source files related directories
+set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ui_files)
+
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_DIR})
+
+# Scan all source and ui files.
+file(GLOB_RECURSE PROJECT_SOURCES 
+    "${SOURCE_DIR}/*.cpp"
+    "${SOURCE_DIR}/*.h"
+
+    "${UI_DIR}/*.ui"
+)
+
+set(INCLUDE_DIRECTORIES
+    ${SOURCE_DIR}/core
+    ${SOURCE_DIR}/ui/editor
+    ${SOURCE_DIR}/ui/game
+    ${SOURCE_DIR}/ui/widgets
+    ${SOURCE_DIR}/
+    ${UI_DIR}
+)
+
 qt_add_executable(OverflowPalette
     WIN32 MACOSX_BUNDLE
-    main.cpp
-    overflowpalettewindow.cpp
-    overflowpalettewindow.h
-    overflowpalettewindow.ui
-    OverflowPaletteGamePanelWidget.h OverflowPaletteGamePanelWidget.cpp OverflowPaletteGamePanelWidget.ui
-    ColorSelectorWidget.h ColorSelectorWidget.cpp
-    GamePanelConfig.h GamePanelConfig.cpp
-    OverflowPaletteBackEnd.h
-    ColorEditor.h ColorEditor.cpp ColorEditor.ui
-    ColorNameInputDialog.h
-    ColorEditorListWidgetItem.h
-    GameConfigManager.h GameConfigManager.cpp GameConfigManager.ui
-    GameEditorPanelWidget.h GameEditorPanelWidget.cpp
-    GameEditorMainWidget.h GameEditorMainWidget.cpp GameEditorMainWidget.ui
-    GameEditorSideToolbox.h GameEditorSideToolbox.cpp GameEditorSideToolbox.ui
-
+    ${PROJECT_SOURCES}
 )
+target_include_directories(OverflowPalette PRIVATE ${INCLUDE_DIRECTORIES})
+
 target_link_libraries(OverflowPalette
     PRIVATE
         Qt::Core
