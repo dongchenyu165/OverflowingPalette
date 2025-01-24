@@ -1,16 +1,12 @@
 cmake_minimum_required(VERSION 3.19)
 project(OverflowPalette LANGUAGES CXX)
 
-if (MSVC)
-    # set(CMAKE_PREFIX_PATH "F:/QT6/6.8.1/msvc2022_64/lib/cmake")
-endif()
 find_package(Qt6 6.8.1 REQUIRED COMPONENTS Core Widgets)
 
 set(CMAKE_CXX_STANDARD 17)
 if (MSVC)
     add_compile_options(/permissive-)
     add_compile_options(/Zc:__cplusplus)
-    # link_directories(F:/QT6/6.8.1/msvc2022_64/lib)
 endif()
 
 qt_standard_project_setup()
